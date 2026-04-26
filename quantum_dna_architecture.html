@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Quantum-DNA Data Security Architecture</title>
+    <!-- Use Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for clean, sharp icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: #1e293b;
+            --purple: #c084fc;
+            --blue: #3b82f6;
+            --green: #10b981;
+            --gold: #fbbf24;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Overall Header */
+        .header {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .header h1 {
+            color: var(--purple);
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(192, 132, 252, 0.4);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .infographic-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding-top: 150px; /* leaves room for header */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-bottom: 60px;
+        }
+
+        #svg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0 40px;
+            gap: 20px; /* Base structural gap */
+            z-index: 2;
+        }
+
+        .row-title {
+            position: absolute;
+            left: 40px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.2);
+            transform: rotate(-90deg) translateY(50px);
+            transform-origin: left center;
+        }
+
+        .sender-title { top: 250px; }
+        .receiver-title { bottom: 250px; }
+
+        /* Node Styling */
+        .node {
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 12px;
+            padding: 1rem 0.5rem;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(8px);
+            position: relative;
+        }
+
+        .node.oval {
+            border-radius: 40px;
+            width: 210px;
+        }
+
+        .node.blue { border-top: 4px solid var(--blue); }
+        .node.green { border-top: 4px solid var(--green); }
+        
+        .node.gold {
+            border: 2px solid var(--gold);
+            background: linear-gradient(160deg, rgba(30,41,59,1) 0%, rgba(60,45,20,1) 100%);
+            width: 380px; /* wide block for quantum */
+            padding: 1.5rem;
+        }
+
+        .node-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .node.blue .node-icon { color: var(--blue); text-shadow: 0 0 12px rgba(59, 130, 246, 0.5); }
+        .node.green .node-icon { color: var(--green); text-shadow: 0 0 12px rgba(16, 185, 129, 0.5); }
+        .node.gold .node-icon { color: var(--gold); text-shadow: 0 0 15px rgba(251, 191, 36, 0.7); font-size: 2.2rem; }
+
+        .node-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; color: #fff; }
+        .node-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.3; }
+
+        .cipher-container {
+            border: 2px dashed rgba(16, 185, 129, 0.35);
+            border-radius: 12px;
+            padding: 1.4rem 0.8rem 0.8rem 0.8rem;
+            width: 250px;
+            background: rgba(16, 185, 129, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            position: relative;
+        }
+        .cipher-title {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-color);
+            padding: 0 10px;
+            color: var(--green);
+            font-weight: 700;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .cipher-step {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(30, 41, 59, 0.95);
+            padding: 0.6rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--green);
+        }
+        .cipher-step i { color: var(--green); font-size: 1rem; width: 20px; text-align: center; }
+        .cipher-step-text { font-weight: 600; font-size: 0.8rem; }
+
+        .svg-label {
+            position: absolute;
+            background: #1e293b;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.1);
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            text-transform: uppercase;
+        }
+        
+        .label-gold { color: var(--gold); border-color: var(--gold); padding: 6px 12px;}
+        .label-blue { color: var(--blue); border: 2px dashed var(--blue); padding: 6px 12px;}
+        .label-green { color: var(--green); border-color: var(--green); }
+
+        .dna-bases { display: flex; gap: 4px; margin-top: 6px; justify-content: center; }
+        .base { background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; font-family: monospace; font-weight: 800; font-size: 0.8rem; }
+        .base.a { color: #f87171; }
+        .base.c { color: #fde047; }
+        .base.g { color: #4ade80; }
+        .base.t { color: #60a5fa; }
+        .binary-text { font-family: monospace; letter-spacing: 1px; color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-top: 6px; }
+
+        /* Center absolutely positioned element */
+        #quantum-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HYBRID QUANTUM-DNA DATA SECURITY ARCHITECTURE</h1>
+        <p>End-to-end biological data processing and quantum cryptography flow.</p>
+    </div>
+
+    <!-- Main Native 1920x1080 Container -->
+    <div class="infographic-container" id="container">
+        <svg id="svg-canvas"></svg>
+
+        <div class="row-title sender-title">SENDER FLOW</div>
+        <div class="row-title receiver-title">RECEIVER FLOW</div>
+
+        <!-- SENDER ROW: Left to Right -->
+        <div class="flow-row" style="padding-top: 20px;">
+            <div class="node blue" id="send-data"><i class="fa-solid fa-folder-open node-icon"></i><div class="node-title">Sender's Personal Data</div><div class="node-desc">Documents, Images</div></div>
+            <div class="node blue" id="send-bin"><i class="fa-solid fa-table-cells node-icon"></i><div class="node-title">Code Data to Binary</div><div class="binary-text">10110 01101</div></div>
+            <div class="node green" id="send-dna"><i class="fa-solid fa-dna node-icon"></i><div class="node-title">Binary to DNA</div><div class="dna-bases"><span class="base a">A</span><span class="base t">T</span><span class="base c">C</span><span class="base g">G</span></div></div>
+            <div class="node oval green" id="enc-start"><i class="fa-solid fa-key node-icon"></i><div class="node-title">DNA Encryption Cipher</div><div class="node-desc">(Starts)</div></div>
+            
+            <div class="cipher-container" id="send-cipher">
+                <div class="cipher-title">Genetic Cipher Steps</div>
+                <div class="cipher-step"><i class="fa-solid fa-shuffle"></i><div class="cipher-step-text">Reshaping (Structure)</div></div>
+                <div class="cipher-step"><i class="fa-solid fa-code-merge"></i><div class="cipher-step-text">Crossover (Mixing)</div></div>
+                <div class="cipher-step"><i class="fa-solid fa-viruses"></i><div class="cipher-step-text">Mutation (Random)</div></div>
+            </div>
+            
+            <div class="node oval green" id="enc-end"><i class="fa-solid fa-lock node-icon"></i><div class="node-title">DNA Encryption Cipher</div><div class="node-desc">(Ends)</div></div>
+        </div>
+
+        <!-- CENTRAL BLOCK -->
+        <div id="quantum-wrapper">
+            <div class="node gold" id="quantum-sys">
+                <i class="fa-solid fa-network-wired node-icon"></i>
+                <div class="node-title" style="font-size:1.2rem; margin-bottom:0.8rem;">QUANTUM SECURE KEY SYSTEM</div>
+                <div style="background: rgba(0,0,0,0.25); padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(251,191,36,0.3); display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                    <i class="fa-solid fa-key" style="color:var(--gold); font-size:1.8rem; filter: drop-shadow(0 0 10px var(--gold));"></i>
+                    <div class="node-desc" style="color:var(--gold); font-weight:700; text-align: left; font-size:0.9rem;">Unique & Unbreakable<br>Quantum Key Generation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECEIVER ROW: Reverse Direction (Flow Right to Left) -->
+        <div class="flow-row" style="flex-direction: row-reverse; padding-bottom: 20px;">
+            <!-- Render Right visually, but logically first in sequence -->
+            <div class="node blue" id="recv-data"><i class="fa-solid fa-file-shield node-icon" style="color: #ef4444;"></i><div class="node-title">Encrypted Data Arrives</div><div class="binary-text" style="color: var(--green);">G A 1 0 C 1</div></div>
+            <div class="node oval green" id="dec-start"><i class="fa-solid fa-key node-icon" style="transform: scaleX(-1);"></i><div class="node-title">DNA Decryption Cipher</div><div class="node-desc">(Starts)</div></div>
+            
+            <div class="cipher-container" id="recv-cipher">
+                <div class="cipher-title">Mirror Cipher Steps</div>
+                <div class="cipher-step"><i class="fa-solid fa-shuffle" style="transform: scaleX(-1);"></i><div class="cipher-step-text">Reshaping.</div></div>
+                <div class="cipher-step"><i class="fa-solid fa-code-merge" style="transform: scaleX(-1);"></i><div class="cipher-step-text">Crossover.</div></div>
+                <div class="cipher-step"><i class="fa-solid fa-viruses" style="opacity: 0.8;"></i><div class="cipher-step-text">Mutation.</div></div>
+            </div>
+
+            <div class="node oval green" id="dec-end"><i class="fa-solid fa-lock-open node-icon"></i><div class="node-title">DNA Decryption Cipher</div><div class="node-desc">(Ends)</div></div>
+            <div class="node green" id="recv-dna"><i class="fa-solid fa-dna node-icon"></i><div class="node-title">DNA to Binary</div><div class="dna-bases"><span class="base a">A</span><span class="base t">T</span><span class="base c">C</span><span class="base g">G</span></div></div>
+            <div class="node blue" id="recv-bin"><i class="fa-solid fa-table-cells node-icon"></i><div class="node-title">Binary to Standard</div><div class="binary-text">10110 01101</div></div>
+            <div class="node blue" id="recv-final"><i class="fa-solid fa-folder-open node-icon" style="color: #4ade80;"></i><div class="node-title" style="color:#4ade80;">Sender's Personal Data</div><div class="node-desc" style="color:#4ade80; font-weight:700;">(Restored)</div></div>
+        </div>
+
+    </div>
+
+    <!-- Script to draw SVG links correctly -->
+    <script>
+        function drawVisuals() {
+            const svg = document.getElementById('svg-canvas');
+            const container = document.getElementById('container');
+            svg.innerHTML = ''; 
+
+            const cRect = container.getBoundingClientRect();
+            
+            // Helper to get center
+            const getC = (id) => {
+                const el = document.getElementById(id);
+                if(!el) return null;
+                const r = el.getBoundingClientRect();
+                return { 
+                    x: r.left - cRect.left + r.width/2, 
+                    y: r.top - cRect.top + r.height/2,
+                    l: r.left - cRect.left, r: r.right - cRect.left,
+                    t: r.top - cRect.top, b: r.bottom - cRect.top
+                };
+            };
+
+            function drawPath(id1, id2, type, color, labelText, labelClass, iconHtml) {
+                const p1 = getC(id1); const p2 = getC(id2);
+                if(!p1 || !p2) return;
+                
+                let pathStr = '';
+                let midX, midY;
+
+                if (type === 'horz-r') { // Flow right
+                    pathStr = `M ${p1.r} ${p1.y} L ${p2.l} ${p2.y}`;
+                    midX = (p1.r + p2.l)/2; midY = p1.y;
+                } 
+                else if (type === 'horz-l') { // Flow left
+                    pathStr = `M ${p1.l} ${p1.y} L ${p2.r} ${p2.y}`;
+                    midX = (p1.l + p2.r)/2; midY = p1.y;
+                }
+                else if (type === 'vert-q-up') { // Quantum up
+                    pathStr = `M ${p1.x} ${p1.t} C ${p1.x} ${p2.b + 60}, ${p2.x} ${p1.t - 60}, ${p2.x} ${p2.b}`;
+                    midX = (p1.x + p2.x)/2; midY = (p1.t + p2.b)/2;
+                }
+                else if (type === 'vert-q-dn') { // Quantum down
+                    pathStr = `M ${p1.x} ${p1.b} C ${p1.x} ${p2.t - 60}, ${p2.x} ${p1.b + 60}, ${p2.x} ${p2.t}`;
+                    midX = (p1.x + p2.x)/2; midY = (p1.b + p2.t)/2;
+                }
+                else if (type === 'transmit') { // Enc-end dropping down to Recv-data
+                    pathStr = `M ${p1.x} ${p1.b} C ${p1.x} ${p1.b + 100}, ${p2.x} ${p2.t - 100}, ${p2.x} ${p2.t}`;
+                    midX = (p1.x + p2.x)/2; midY = (p1.b + p2.t)/2;
+                }
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', pathStr);
+                path.setAttribute('stroke', color);
+                path.setAttribute('stroke-width', 3);
+                path.setAttribute('fill', 'none');
+                
+                if(type === 'transmit') {
+                    path.setAttribute('stroke-dasharray', '8,8');
+                    path.setAttribute('stroke-width', 4);
+                }
+
+                path.style.filter = `drop-shadow(0 0 6px ${color})`;
+                svg.appendChild(path);
+
+                if (labelText) {
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'svg-label ' + (labelClass || '');
+                    labelDiv.style.left = midX + 'px';
+                    labelDiv.style.top = midY + 'px';
+                    labelDiv.innerHTML = labelText + (iconHtml ? ' '+iconHtml : '');
+                    container.appendChild(labelDiv);
+                }
+            }
+
+            // --- Horizontal Flow Links ---
+            const flowLabels = ['CONVERT', 'CONVERT', 'APPLY', 'APPLY', 'FLOW'];
+            // Sender Array
+            const seq1 = ['send-data', 'send-bin', 'send-dna', 'enc-start', 'send-cipher', 'enc-end'];
+            for(let i=0; i<5; i++) drawPath(seq1[i], seq1[i+1], 'horz-r', 'rgba(255,255,255,0.2)', flowLabels[i], '', '<i class="fa-solid fa-chevron-right" style="opacity:0.6; margin-left:4px;"></i>');
+
+            // Receiver Array
+            const seq2 = ['recv-data', 'dec-start', 'recv-cipher', 'dec-end', 'recv-dna', 'recv-bin', 'recv-final'];
+            const flowLabelsRev = ['APPLY', 'APPLY', 'CONVERT', 'CONVERT', 'CONVERT', 'FINISH'];
+            for(let i=0; i<6; i++) drawPath(seq2[i], seq2[i+1], 'horz-l', 'rgba(255,255,255,0.2)', flowLabelsRev[i], '', '<i class="fa-solid fa-chevron-left" style="opacity:0.6; margin-left:4px;"></i>');
+
+            // --- Vertical Key Flows ---
+            drawPath('quantum-sys', 'enc-start', 'vert-q-up', '#fbbf24', 'QKD Secure Distribution', 'label-gold');
+            drawPath('quantum-sys', 'dec-start', 'vert-q-dn', '#fbbf24', 'QKD Secure Distribution', 'label-gold');
+
+            // --- Transmission Link ---
+            drawPath('enc-end', 'recv-data', 'transmit', '#3b82f6', 'Encrypted Transfer', 'label-blue', '<i class="fa-solid fa-network-wired" style="margin-left:4px;"></i>');
+        }
+
+        window.onload = drawVisuals;
+    </script>
+</body>
+</html>
